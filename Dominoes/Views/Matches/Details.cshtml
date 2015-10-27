@@ -1,0 +1,50 @@
+﻿@model Dominoes.Models.Match
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Match</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Game.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Game.Notes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ScoreTeamA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ScoreTeamA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ScoreTeamB)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ScoreTeamB)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MatchID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

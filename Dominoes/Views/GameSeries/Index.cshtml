@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Dominoes.Models.GameSerie>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserProfileInfo.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Notes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameWinner)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PollonaValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ViajeroValue)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserProfileInfo.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Notes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GameWinner)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PollonaValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ViajeroValue)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.GameSerieID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.GameSerieID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.GameSerieID })
+        </td>
+    </tr>
+}
+
+</table>
