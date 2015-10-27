@@ -55,7 +55,8 @@ namespace Dominoes.Controllers
                 db.Match.Add(match);
                 db.SaveChanges();
 
-                int winner = match.calculateScore(match.GameID);
+                MatchHandler matchHandler = new MatchHandler();
+                int winner = matchHandler.calculateScore(match.GameID);
 
                 return RedirectToAction("Index");
             }
