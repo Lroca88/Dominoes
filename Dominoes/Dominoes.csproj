@@ -175,6 +175,7 @@
     <Compile Include="Models\GameSerie.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\GameHandler.cs" />
+    <Compile Include="Models\UserHandler.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

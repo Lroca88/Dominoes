@@ -39,7 +39,15 @@ namespace Dominoes.Controllers
         // GET: Games/Create
         public ActionResult Create()
         {
-            ViewBag.GameSerieID = new SelectList(db.GameSerie, "GameSerieID", "Name");
+            UserHandler userHandler = new UserHandler();
+            UserProfileInfo user = userHandler.GetUserLogged();
+            ViewBag.GameSerieID = new SelectList(user.GameSeries, "GameSerieID", "Name");
+            ViewBag.Players = new SelectList(user.Groups
+                                                 .Where(i => i.DominoesGroupID == user.GroupAdministered)
+                                                 .Select(i => i.Users).First(),
+                                             "UserProfileInfoID",
+                                             "FirstName");
+
             return View();
         }
 

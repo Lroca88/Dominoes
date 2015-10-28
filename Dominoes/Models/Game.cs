@@ -10,6 +10,7 @@ namespace Dominoes.Models
         public Game()
         {
             this.Matches = new HashSet<Match>();
+            this.Date = null;
         }
 
         public int GameID { get; set; }
@@ -18,7 +19,7 @@ namespace Dominoes.Models
         public virtual bool GameComplete { get; set; }
         public virtual byte WinningTeam { get; set; }
         public virtual string WinningCategory { get; set; }
-        public virtual DateTime Date { get; set; }
+        public virtual DateTime? Date { get; set; }
         public virtual int Player1 { get; set; }
         public virtual int Player2 { get; set; }
         public virtual int Player3 { get; set; }

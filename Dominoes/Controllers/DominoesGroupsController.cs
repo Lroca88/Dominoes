@@ -19,16 +19,16 @@ namespace Dominoes.Controllers
         // GET: DominoesGroups
         public ActionResult Index()
         {
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            var currentuser = manager.FindById(User.Identity.GetUserId());
+            //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            //var currentuser = manager.FindById(User.Identity.GetUserId());
             // Get the users list for Administered Group
-            var GroupUsersList = db.DominoesGroup                  
-                                   .Include(i => i.Users)
-                                   .Where(i => i.DominoesGroupID == currentuser.UserProfileInfo.GroupAdministered)
-                                   .Single();
+            //var GroupUsersList = db.DominoesGroup                  
+            //                       .Include(i => i.Users)
+            //                       .Where(i => i.DominoesGroupID == currentuser.UserProfileInfo.GroupAdministered)
+            //                       .Single();
 
-
-            return View(db.DominoesGroup.ToList());
+            UserHandler UserHandler = new UserHandler();
+            return View(new[] { UserHandler.GetGroupAdministered() });
         }
 
         // GET: DominoesGroups/Details/5
