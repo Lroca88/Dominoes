@@ -17,8 +17,10 @@ namespace Dominoes.Controllers
         // GET: GameSeries
         public ActionResult Index()
         {
+            UserHandler UserHandler = new UserHandler();
+            var User = UserHandler.GetUserLogged();
 
-            var gameSerie = db.GameSerie.Include(g => g.UserProfileInfo);
+            var gameSerie = User.GameSeries;
             return View(gameSerie.ToList());
         }
 
@@ -49,9 +51,13 @@ namespace Dominoes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "GameSerieID,Name,Notes,GameWinner,PollonaValue,ViajeroValue,UserProfileInfoID")] GameSerie gameSerie)
+        public ActionResult Create([Bind(Include = "GameSerieID,Name,Notes,GameWinner,PollonaValue,ViajeroValue")] GameSerie gameSerie)
         {
             //gameSerie.UserProfileInfo = db.UserProfileInfo.First();  // No needed
+
+            UserHandler UserHandler = new UserHandler();
+            var User = UserHandler.GetUserLogged();
+            gameSerie.UserProfileInfoID = User.UserProfileInfoID;
 
             if (ModelState.IsValid)
             {
