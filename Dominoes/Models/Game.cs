@@ -17,6 +17,7 @@ namespace Dominoes.Models
         public virtual byte WinningScore { get; set; }
         public virtual bool GameComplete { get; set; }
         public virtual byte WinningTeam { get; set; }
+        public virtual string WinningCategory { get; set; }
         public virtual DateTime Date { get; set; }
         public virtual int Player1 { get; set; }
         public virtual int Player2 { get; set; }
