@@ -20,7 +20,8 @@ namespace Dominoes.Controllers
             UserHandler UserHandler = new UserHandler();
             UserProfileInfo User = UserHandler.GetUserLogged();
             var group = UserHandler.GetGroupAdministered();
-            var GameSeriesByUser = UserHandler.GetGameSeriesByUser(group.Users);
+            //var GameSeriesUser = UserHandler.GetGameSeriesScore(group.Users);
+            var GroupUser = UserHandler.GetGroupsScore(group.Users);
             return View(db.UserProfileInfo.ToList());
         }
 

@@ -40,10 +40,10 @@ namespace Dominoes.Models
             }
         }
 
-        public List<GameSeriesUserView> GetGameSeriesByUser(ICollection<UserProfileInfo> users)
+        public List<DashboardUserView> GetGameSeriesScore(ICollection<UserProfileInfo> users)
         {
 
-            List<GameSeriesUserView> list = new List<GameSeriesUserView>();
+            List<DashboardUserView> list = new List<DashboardUserView>();
 
             foreach(var user in users)
             {
@@ -65,7 +65,7 @@ namespace Dominoes.Models
                                          }
                                       );
 
-                GameSeriesUserView GameSeriesUser = new GameSeriesUserView();
+                DashboardUserView GameSeriesUser = new DashboardUserView();
                 GameSeriesUser.UserName = user.FirstName;
                 GameSeriesUser.UserProfileInfoID = Id;
                 var key = GameSerieData.First().GameSerieID;
@@ -81,8 +81,8 @@ namespace Dominoes.Models
                     else
                     {
 
-                        GameSeriesUser.GameSerieID.Add(key);
-                        GameSeriesUser.GameSerieName.Add(SerieName);
+                        GameSeriesUser.ID.Add(key);
+                        GameSeriesUser.Name.Add(SerieName);
                         GameSeriesUser.TotalPoints.Add(total);
 
                         key = GameData.GameSerieID;
@@ -91,12 +91,66 @@ namespace Dominoes.Models
                     }
                 }
 
-                GameSeriesUser.GameSerieID.Add(key);
-                GameSeriesUser.GameSerieName.Add(SerieName);
+                GameSeriesUser.ID.Add(key);
+                GameSeriesUser.Name.Add(SerieName);
                 GameSeriesUser.TotalPoints.Add(total);
 
                 list.Add(GameSeriesUser);
             }  
+            return list;
+        }
+
+        public List<DashboardUserView> GetGroupsScore(ICollection<UserProfileInfo> users)
+        {
+            List<DashboardUserView> list = new List<DashboardUserView>();
+            foreach (var user in users)
+            {
+                var Id = user.UserProfileInfoID;
+                var GroupData = db.Game
+                                      .Where
+                                      (
+                                         i => (i.WinningTeam == 1 && (i.Player1 == Id || i.Player2 == Id))
+                                         || (i.WinningTeam == 2 && (i.Player3 == Id || i.Player4 == Id))
+                                      )
+                                      .OrderBy(i => i.GameSerie.UserProfileInfo.GroupAdministered)
+                                      .Select
+                                      (n => new
+                                      {
+                                          GroupID = n.GameSerie.UserProfileInfo.GroupAdministered,
+                                          GameSerieID = n.GameSerieID,
+                                          WinningCategory = n.WinningCategory
+                                      });
+
+                DashboardUserView GroupUser = new DashboardUserView();
+                GroupUser.UserName = user.FirstName;
+                GroupUser.UserProfileInfoID = Id;
+                var key = GroupData.First().GameSerieID;
+                var total = 0;
+                var GroupID = GroupData.First().GroupID;
+
+                foreach (var GData in GroupData)
+                {
+                    if (GroupID == GData.GroupID)
+                    {
+                        total += GetCategoryValue(GData.WinningCategory, key);
+                    }
+                    else
+                    {
+
+                        GroupUser.ID.Add(GroupID);
+                        GroupUser.TotalPoints.Add(total);
+
+                        key = GData.GameSerieID;
+                        total = GetCategoryValue(GData.WinningCategory, key);
+                        GroupID = GData.GroupID;
+                    }
+                }
+
+                GroupUser.ID.Add(GroupID);
+                GroupUser.TotalPoints.Add(total);
+
+                list.Add(GroupUser);
+            }
             return list;
         }
 
