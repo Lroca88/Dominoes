@@ -53,7 +53,17 @@
     </div>
     <div class="col-md-4">
         <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+            @*@Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })*@
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="~/Content/Images/dominoes.jpg" alt="&copy; Luis A" />
+                        <div class="caption">
+                            <h3>Dominoes Statistics</h3>  
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
 </div>

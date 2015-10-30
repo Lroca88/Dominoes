@@ -177,6 +177,7 @@
     <Compile Include="Models\GameSerie.cs" />
     <Compile Include="Models\DashboardUserView.cs" />
     <Compile Include="Models\Match.cs" />
+    <Compile Include="Models\MonthsUser.cs" />
     <Compile Include="Models\UserHandler.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -188,6 +189,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\dominoes.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -243,7 +245,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\DominoesGroups\Create.cshtml" />
     <Content Include="Views\DominoesGroups\Delete.cshtml" />
     <Content Include="Views\DominoesGroups\Details.cshtml" />
     <Content Include="Views\DominoesGroups\Edit.cshtml" />
@@ -263,10 +264,6 @@
     <Content Include="Views\Matches\Details.cshtml" />
     <Content Include="Views\Matches\Edit.cshtml" />
     <Content Include="Views\Matches\Index.cshtml" />
-    <Content Include="Views\Dashboard\Create.cshtml" />
-    <Content Include="Views\Dashboard\Delete.cshtml" />
-    <Content Include="Views\Dashboard\Details.cshtml" />
-    <Content Include="Views\Dashboard\Edit.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

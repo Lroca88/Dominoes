@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
@@ -13,6 +14,8 @@ namespace Dominoes.Models
         }
 
         public int GameSerieID { get; set; }
+
+        [DisplayName("GameSerie Name")]
         public virtual string Name { get; set; }
         public virtual string Notes { get; set; }
         public virtual byte GameWinner { get; set; }

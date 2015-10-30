@@ -157,11 +157,6 @@ namespace Dominoes.Controllers
                 var ID = 0;
                 try 
                 { 
-                    //ID = (from G in db.DominoesGroup
-                    //          orderby G.DominoesGroupID descending
-                    //          select G.DominoesGroupID
-                    //         ).First();
-
                     ID = db.DominoesGroup.Max(g => g.DominoesGroupID) + 1;
                 } 
                 catch (Exception)
@@ -214,7 +209,7 @@ namespace Dominoes.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Dashboard");
                 }
                 AddErrors(result);
             }
@@ -443,7 +438,7 @@ namespace Dominoes.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         //

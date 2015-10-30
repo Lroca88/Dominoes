@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -25,6 +26,19 @@ namespace Dominoes.Models
             var currentuser = GetUserLogged();
             var group = db.DominoesGroup.Where(i => i.DominoesGroupID == currentuser.GroupAdministered).Single();
             return group;
+        }
+
+        public string[] GetNamesInGame(Game game)
+        {
+            string[] Names = new string[4]
+            {
+                db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player1).Select( i => i.FirstName).Single(),
+                db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player2).Select( i => i.FirstName).Single(),
+                db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player3).Select( i => i.FirstName).Single(),
+                db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player4).Select( i => i.FirstName).Single()
+            };
+
+            return Names;
         }
 
         public int GetCategoryValue( string category, int Id)
@@ -68,9 +82,15 @@ namespace Dominoes.Models
                 DashboardUserView GameSeriesUser = new DashboardUserView();
                 GameSeriesUser.UserName = user.FirstName;
                 GameSeriesUser.UserProfileInfoID = Id;
-                var key = GameSerieData.First().GameSerieID;
+                var key = 0;
                 var total = 0;
-                string SerieName = GameSerieData.First().GameSerieName;
+                string SerieName = "";
+                
+                if (GameSerieData.Any()) 
+                {
+                    key = GameSerieData.First().GameSerieID;
+                    SerieName = GameSerieData.First().GameSerieName;
+                }  
 
                 foreach(var GameData in GameSerieData)
                 {
@@ -91,10 +111,12 @@ namespace Dominoes.Models
                     }
                 }
 
-                GameSeriesUser.ID.Add(key);
-                GameSeriesUser.Name.Add(SerieName);
-                GameSeriesUser.TotalPoints.Add(total);
-
+                if (GameSerieData.Any())
+                {
+                    GameSeriesUser.ID.Add(key);
+                    GameSeriesUser.Name.Add(SerieName);
+                    GameSeriesUser.TotalPoints.Add(total);
+                }
                 list.Add(GameSeriesUser);
             }  
             return list;
@@ -124,33 +146,93 @@ namespace Dominoes.Models
                 DashboardUserView GroupUser = new DashboardUserView();
                 GroupUser.UserName = user.FirstName;
                 GroupUser.UserProfileInfoID = Id;
-                var key = GroupData.First().GameSerieID;
                 var total = 0;
-                var GroupID = GroupData.First().GroupID;
+                var key = 0;
+                var GroupID = 0;
+
+
+                if (GroupData.Any())
+                {
+                    key = GroupData.First().GameSerieID;
+                    GroupID = GroupData.First().GroupID;
+                }
+                
 
                 foreach (var GData in GroupData)
                 {
                     if (GroupID == GData.GroupID)
                     {
                         total += GetCategoryValue(GData.WinningCategory, key);
+                        key = GData.GameSerieID;
                     }
                     else
                     {
 
                         GroupUser.ID.Add(GroupID);
                         GroupUser.TotalPoints.Add(total);
-
+                        GroupUser.Name.Add(db.DominoesGroup
+                                              .Where(i => i.DominoesGroupID == GroupID)
+                                              .Select(i => i.Name).Single());
                         key = GData.GameSerieID;
                         total = GetCategoryValue(GData.WinningCategory, key);
                         GroupID = GData.GroupID;
                     }
                 }
 
-                GroupUser.ID.Add(GroupID);
-                GroupUser.TotalPoints.Add(total);
+                if (GroupData.Any())
+                {
+                    GroupUser.ID.Add(GroupID);
+                    GroupUser.TotalPoints.Add(total);
+                    GroupUser.Name.Add(db.DominoesGroup
+                                                  .Where(i => i.DominoesGroupID == GroupID)
+                                                  .Select(i => i.Name).Single());
+                }
 
                 list.Add(GroupUser);
             }
+            return list;
+        }
+
+
+        public List<DashboardUserView> GetMonthsScore(ICollection<UserProfileInfo> users)
+        {
+            List<DashboardUserView> list = new List<DashboardUserView>();
+            foreach (var user in users)
+            {
+                var Id = user.UserProfileInfoID;
+                var MonthData = db.Game
+                                     .Where
+                                     (
+                                        i => (i.WinningTeam == 1 && (i.Player1 == Id || i.Player2 == Id))
+                                        || (i.WinningTeam == 2 && (i.Player3 == Id || i.Player4 == Id))
+                                     )
+                                     .OrderBy(i => i.GameSerie.GameSerieID)
+                                     .Select
+                                     (n => new
+                                     {
+                                         Month = n.Date.Value.Month,
+                                         GameSerieID = n.GameSerieID,
+                                         WinningCategory = n.WinningCategory
+                                     });
+
+                DashboardUserView MonthUser = new DashboardUserView();
+                MonthUser.UserName = user.FirstName;
+                MonthUser.UserProfileInfoID = Id;
+                var key = 0;
+                int[] Month = new int[12];
+
+                foreach (var MData in MonthData)
+                {
+                    key = MData.GameSerieID;
+                    Month[MData.Month - 1] += GetCategoryValue(MData.WinningCategory, key);
+                }
+
+                MonthUser.TotalPoints = Month.ToList();
+                MonthUser.Name = DateTimeFormatInfo.CurrentInfo.MonthNames.ToList();
+                MonthUser.ID = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+                list.Add(MonthUser);
+            }
+
             return list;
         }
 

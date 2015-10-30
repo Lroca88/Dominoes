@@ -46,28 +46,6 @@ namespace Dominoes.Controllers
             return View(dominoesGroup);
         }
 
-        // GET: DominoesGroups/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: DominoesGroups/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DominoesGroupID,Name,Admin")] DominoesGroup dominoesGroup)
-        {
-            if (ModelState.IsValid)
-            {
-                db.DominoesGroup.Add(dominoesGroup);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(dominoesGroup);
-        }
 
         // GET: DominoesGroups/Edit/5
         public ActionResult Edit(int? id)

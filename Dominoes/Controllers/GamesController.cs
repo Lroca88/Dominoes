@@ -17,7 +17,10 @@ namespace Dominoes.Controllers
         // GET: Games
         public ActionResult Index()
         {
-            var game = db.Game.Include(g => g.GameSerie);
+            UserHandler UserHandler = new UserHandler();
+            var UserProfileInfoID = UserHandler.GetUserLogged().UserProfileInfoID;
+            var game = db.Game.Include(g => g.GameSerie)
+                              .Where( g => g.GameSerie.UserProfileInfoID == UserProfileInfoID);
             return View(game.ToList());
         }
 
@@ -29,6 +32,8 @@ namespace Dominoes.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Game game = db.Game.Find(id);
+            UserHandler UserHandler = new UserHandler();
+            ViewBag.NamesInGame = UserHandler.GetNamesInGame(game);
             if (game == null)
             {
                 return HttpNotFound();
@@ -65,7 +70,14 @@ namespace Dominoes.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.GameSerieID = new SelectList(db.GameSerie, "GameSerieID", "Name", game.GameSerieID);
+            UserHandler userHandler = new UserHandler();
+            UserProfileInfo user = userHandler.GetUserLogged();
+            ViewBag.GameSerieID = new SelectList(user.GameSeries, "GameSerieID", "Name");
+            ViewBag.Players = new SelectList(user.Groups
+                                                 .Where(i => i.DominoesGroupID == user.GroupAdministered)
+                                                 .Select(i => i.Users).First(),
+                                             "UserProfileInfoID",
+                                             "FirstName");
             return View(game);
         }
 

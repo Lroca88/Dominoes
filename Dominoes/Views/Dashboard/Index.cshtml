@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Dominoes.Models.UserProfileInfo>
+﻿@model IEnumerable<List<Dominoes.Models.DashboardUserView>>
 
 @{
     ViewBag.Title = "Index";
@@ -6,40 +6,87 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GroupAdministered)
-        </th>
-        <th></th>
-    </tr>
+<div class="container">
+    <form class="pull-right visible-md visible-lg">
+        <a class="btn btn-primary" href="@Url.Action("Index", "DominoesGroups")" role="button">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            Manage My Group       
+        </a>
+    </form>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GroupAdministered)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.UserProfileInfoID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.UserProfileInfoID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.UserProfileInfoID })
-        </td>
-    </tr>
-}
+    <form class="visible-xs visible-sm" style="padding-bottom:5px;">
+        <a class="btn btn-primary" href="@Url.Action("Index", "DominoesGroups")" role="button">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            Manage My Group
+        </a>
+    </form>
 
-</table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#1">GameSeries Statistics</a></li>
+        <li><a data-toggle="tab" href="#2">Groups Statistics</a></li>
+        <li><a data-toggle="tab" href="#3">Month Statistics</a></li>
+    </ul>
+
+
+
+    <div class="tab-content" style="padding-top:40px;">
+
+        @{
+            var count = 0;
+            string[] Text = { "GameSerie and Points", "Group and Points", "Month and Points" };
+            string[] Type = { "info", "danger", "warning" };
+        }
+        @foreach (var item in Model)
+        {
+            count++;     // For changing colors and Personalized Text
+            string active = "";
+            
+            if (count == 1) 
+            {
+                active = "in active";
+            }
+           
+            <div id="@count" class="tab-pane fade @active">
+            
+            @foreach (var userSet in item)
+            {
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                @Html.DisplayFor(modelItem => userSet.UserName)
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="alert alert-@Type[count-1]">
+                                <b>@Text[count - 1]</b>
+                                <ul class="list-group">
+                                    @for (int i = 0; i < userSet.TotalPoints.Count(); i++)
+                                    {
+                                        if (userSet.TotalPoints[i] != 0)
+                                        {
+                                            <li class="list-group-item">
+                                                <span class="badge">@userSet.TotalPoints[i]</span>
+                                                @{
+                                                    if (@count == 2)
+                                                    {
+                                                        userSet.Name[i] = userSet.Name[i] + "'s Group"; 
+                                                    } 
+                                                }
+
+                                                @userSet.Name[i]
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            </div>
+        }
+    </div>
+</div>
+

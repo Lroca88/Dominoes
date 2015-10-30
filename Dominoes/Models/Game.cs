@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -14,6 +16,8 @@ namespace Dominoes.Models
         }
 
         public int GameID { get; set; }
+
+        [DisplayName("Game Notes")]
         public virtual string Notes { get; set; }
         public virtual byte WinningScore { get; set; }
         public virtual bool GameComplete { get; set; }
@@ -24,6 +28,9 @@ namespace Dominoes.Models
         public virtual int Player2 { get; set; }
         public virtual int Player3 { get; set; }
         public virtual int Player4 { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "You need to Add a GameSerie first")]
         public int GameSerieID { get; set; }
 
         public virtual GameSerie GameSerie { get; set; }
