@@ -88,12 +88,15 @@ namespace Dominoes.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            UserHandler userHandler = new UserHandler();
+            UserProfileInfo user = userHandler.GetUserLogged();
             Game game = db.Game.Find(id);
             if (game == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.GameSerieID = new SelectList(db.GameSerie, "GameSerieID", "Name", game.GameSerieID);
+            ViewBag.GameSerieID = new SelectList(user.GameSeries, "GameSerieID", "Name");
             return View(game);
         }
 
