@@ -33,6 +33,7 @@
 
         @{
             var count = 0;
+            var rowcount = 0; 
             string[] Text = { "GameSerie and Points", "Group and Points", "Month and Points" };
             string[] Type = { "info", "danger", "warning" };
         }
@@ -40,16 +41,23 @@
         {
             count++;     // For changing colors and Personalized Text
             string active = "";
-            
-            if (count == 1) 
+
+            if (count == 1)
             {
                 active = "in active";
             }
            
             <div id="@count" class="tab-pane fade @active">
             
+            @{rowcount = 0;
+            }    
             @foreach (var userSet in item)
             {
+                if (rowcount % 2 == 0) 
+                { 
+                    @:<div class="row">
+                }
+                
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -83,6 +91,12 @@
                         </div>
                     </div>
                 </div>
+                if (rowcount % 2 != 0 || rowcount == item.Count() - 1)
+                { 
+                    @:</div>
+                }
+                
+                rowcount++;
 
             }
             </div>

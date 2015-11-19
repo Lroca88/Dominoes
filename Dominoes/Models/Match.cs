@@ -9,8 +9,8 @@ namespace Dominoes.Models
     public class Match
     {
         public int MatchID { get; set; }
-        public virtual byte ScoreTeamA { get; set; }
-        public virtual byte ScoreTeamB { get; set; }
+        public virtual byte Score { get; set; }
+        public virtual byte TeamWinner { get; set; }
         public string Notes { get; set; }
 
         [Required]

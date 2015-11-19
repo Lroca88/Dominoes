@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Dominoes.Models
 {
@@ -10,28 +11,37 @@ namespace Dominoes.Models
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public bool calculateScore(int GameID)
+        public bool calculateScore(int GameID, byte Winner)
         {
 
             var Game = db.Game.Find(GameID);
 
-            int NumberMatchA = Game.Matches.Count(i => i.ScoreTeamA > 0);
-            int NumberMatchB = Game.Matches.Count(i => i.ScoreTeamB > 0);
-
-            int TotalA = Game.Matches.Sum(i => i.ScoreTeamA);
-            int TotalB = Game.Matches.Sum(i => i.ScoreTeamB);
-
+            // Total amount of points eraned by TeamWinner
+            int TotalPoints = Game.Matches.Where(i => i.TeamWinner == Winner).Sum(i => i.Score);
+            
+            // Score needed to win a game
             int WinningScore = Game.WinningScore;
 
-            if (TotalA >= WinningScore)
+            // Comparing the current total amount with the Score needed
+            if (TotalPoints >= WinningScore)
             {
-                string Category = CalculatePoints(NumberMatchA, NumberMatchB);
-                Game = populateGame(Game, 1, Category);
-            }
-            else if (TotalB >= WinningScore)
-            {
-                string Category = CalculatePoints(NumberMatchB, NumberMatchB);
-                Game = populateGame(Game, 2, Category);
+                // Including all teams of this particular game in a List
+                List<int> TeamList = new List<int> {Winner};
+                checkTeam(TeamList, Game.TeamPlayer1);
+                checkTeam(TeamList, Game.TeamPlayer2);
+                checkTeam(TeamList, Game.TeamPlayer3);
+                checkTeam(TeamList, Game.TeamPlayer4);
+
+                // Looking for amount of matches that every team has won 
+                List<int> TeamMatches = new List<int>();
+                foreach (var Team in TeamList)
+                {
+                    TeamMatches.Add(Game.Matches.Count(i => i.TeamWinner == Team));
+                }
+
+                // Defining winning category (Viajero, Pollona, GameWinner)
+                string Category = CalculatePoints(TeamMatches);
+                Game = populateGame(Game, Winner, Category);
             }
             else
             {
@@ -43,17 +53,28 @@ namespace Dominoes.Models
             return true;
         }
 
-        public string CalculatePoints(int a1, int a2)
+        public void checkTeam(List<int> TeamList, int TeamID)
         {
-            if (a1 == 1 && a2 == 0)         // Viajero 
+            if (!TeamList.Contains(TeamID) && TeamID != 0)
+            {
+                TeamList.Add(TeamID);
+            }
+        }
+
+        public string CalculatePoints(List<int> TeamMatches)
+        {
+            var WinnerMatches = TeamMatches.First();
+            TeamMatches.RemoveAt(0);
+
+            if (WinnerMatches == 1 && !TeamMatches.Any(z => z > 0))         // Viajero 
             {
                 return "Viajero";
             }
-            else if (a1 > 1 && a2 == 0)     // Pollona
+            else if (WinnerMatches > 1 && !TeamMatches.Any(z => z > 0))     // Pollona
             {
                 return "Pollona";
             }
-            else                            // GameWinner
+            else                                                            // GameWinner
             {
                 return "GameWinner";
             }
@@ -66,6 +87,36 @@ namespace Dominoes.Models
             Game.WinningTeam = WinningTeam;
             Game.WinningCategory = Category;
             return Game;
+        }
+
+        public IEnumerable<SelectListItem> SelectGameSeries(UserProfileInfo user, Game game)
+        {
+            var GameSeries = user.GameSeries.ToList();
+            IEnumerable<SelectListItem> selectList =
+                from g in GameSeries
+                select new SelectListItem
+                {
+                    Selected = (g.GameSerieID == game.GameSerieID),
+                    Text = g.Name,
+                    Value = g.GameSerieID.ToString()
+                };
+
+            return selectList;
+        }
+
+
+        public IEnumerable<SelectListItem> SelectGames(int UserProfileInfoID, int GameID)
+        {
+            var Games = db.Game.Where(i => (i.GameSerie.UserProfileInfoID == UserProfileInfoID) && (i.GameComplete == false));
+            IEnumerable<SelectListItem> selectList =
+                from g in Games
+                select new SelectListItem
+                {
+                    Selected = (g.GameID == GameID),
+                    Text = g.Notes,
+                    Value = g.GameID.ToString()
+                };
+            return selectList;
         }
     }
 }

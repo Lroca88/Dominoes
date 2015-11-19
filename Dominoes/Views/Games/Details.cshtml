@@ -2,14 +2,35 @@
 
 @{
     ViewBag.Title = "Details";
-    String[] Names = ViewBag.NamesInGame;
+    List<String> Names = ViewBag.NamesInGame;
 }
 
-<h2>Details</h2>
-
 <div>
-    <h4>Game</h4>
+
+    <h2>Game Details</h2>
+    <div>
+        @switch (Model.WinningCategory)
+        {
+            case  "Pollona":
+                <i class="fa fa-tripadvisor fa-5x"></i>
+                break;
+            case "Viajero":
+                <i class="fa fa-paper-plane fa-5x"></i>
+                break;
+            case "GameWinner":
+                <i class="fa fa-trophy fa-5x"></i>
+                break;
+            default:
+                <h1> 
+                    <span class="label label-warning">Still Playing <i class="fa fa-check-square"></i></span>
+                </h1>
+                break;
+        }
+        
+        
+    </div>
     <hr />
+    
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.GameSerie.Name)
@@ -64,7 +85,7 @@
         </dt>
 
         <dd>
-            @Names[0]
+            @Names.ElementAt(0)
         </dd>
 
         <dt>
@@ -72,24 +93,31 @@
         </dt>
 
         <dd>
-            @Names[1]
+            @Names.ElementAt(1)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Player3)
-        </dt>
+        @if (Names.Count() > 2)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Player3)
+            </dt>
+            
+            <dd>
+                @Names.ElementAt(2)
+            </dd>  
+        }
 
-        <dd>
-            @Names[2]
-        </dd>
+         @if (Names.Count() > 3)
+         {
+            <dt>
+                @Html.DisplayNameFor(model => model.Player4)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Player4)
-        </dt>
-
-        <dd>
-            @Names[3]
-        </dd>
+            <dd>
+                @Names.ElementAt(3)
+            </dd>
+         }
+        
 
     </dl>
 </div>

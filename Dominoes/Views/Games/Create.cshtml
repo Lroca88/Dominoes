@@ -26,8 +26,6 @@
         <div class="form-group">
             @Html.LabelFor(model => model.WinningScore, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.EditorFor(model => model.WinningScore, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.WinningScore, "", new { @class = "text-danger" })*@
 
                 @Html.DropDownList("WinningScore", 
                                       new SelectList(
@@ -43,70 +41,37 @@
             </div>
         </div>
 
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.GameComplete, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.GameComplete)
-                    @Html.ValidationMessageFor(model => model.GameComplete, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>*@
-
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.WinningTeam, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.WinningTeam, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.WinningTeam, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
-
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Player1, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Player1", ViewBag.Players as SelectList, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Player1, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Player2, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Player2", ViewBag.Players as SelectList, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Player2, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Player3, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Player3", ViewBag.Players as SelectList, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Player3, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Player4, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Player4", ViewBag.Players as SelectList, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Player4, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.GameSerieID, "GameSerieID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("GameSerieID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.GameSerieID, "", new { @class = "text-danger" })
             </div>
+        </div>
+
+        
+        <div class="form-group">
+
+            <div class="btn-group btn-group-lg col-md-offset-2" role="group">
+                <button class="btn btn-primary" type="button" id="War">
+                    <span class="glyphicon glyphicon-flash"></span> War Game
+                </button>
+                <button class="btn btn-warning" type="button" id="Teams">
+                    <span class="glyphicon glyphicon-retweet"></span> Teams Game
+                </button>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-primary  hidden" type="button" id="AddPlayer">
+                    Add Additional Player <span class="badge">2</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="placeholder">
         </div>
 
         <div class="form-group">
@@ -123,4 +88,76 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script id="template2" type="text/template">
+        <div class="form-group hidden" id="Team1Show">
+            <h2 class="col-md-offset-2 col-md-10"> <span class="label label-warning">Team 1</span></h2>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player1, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownList("Player1", ViewBag.Players as SelectList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Player1, "", new { @class = "text-danger" })
+            </div>
+
+            @Html.LabelFor(model => model.TeamPlayer1, htmlAttributes: new { @class = "hidden control-label col-md-2" })
+            <div class="col-md-4 hidden">
+                @Html.EditorFor(model => model.TeamPlayer1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TeamPlayer1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player2, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownList("Player2", ViewBag.Players as SelectList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Player2, "", new { @class = "text-danger" })
+            </div>
+
+            @Html.LabelFor(model => model.TeamPlayer2, htmlAttributes: new { @class = "hidden control-label col-md-2" })
+            <div class="col-md-4 hidden">
+                @Html.EditorFor(model => model.TeamPlayer2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TeamPlayer2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </script>
+    
+    <script id="template3" type="text/template">
+        <div class="form-group hidden" id="Team2Show">
+            <h2 class="col-md-offset-2 col-md-10"> <span class="label label-warning">Team 2</span></h2>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player3, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownList("Player3", ViewBag.Players as SelectList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Player3, "", new { @class = "text-danger" })
+            </div>
+
+            @Html.LabelFor(model => model.TeamPlayer3, htmlAttributes: new { @class = "hidden control-label col-md-2" })
+            <div class="col-md-4 hidden">
+                @Html.EditorFor(model => model.TeamPlayer3, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TeamPlayer3, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </script>
+
+    <script id="template4" type="text/template">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player4, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownList("Player4", ViewBag.Players as SelectList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Player4, "", new { @class = "text-danger" })
+            </div>
+
+            @Html.LabelFor(model => model.TeamPlayer4, htmlAttributes: new { @class = "hidden control-label col-md-2" })
+            <div class="col-md-4 hidden">
+                @Html.EditorFor(model => model.TeamPlayer4, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TeamPlayer4, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </script>
+
+
+    <script src="~/Scripts/AppScripts/players.js"></script>
 }

@@ -56,12 +56,14 @@ namespace Dominoes.Controllers
             return View();
         }
 
+        //[Bind(Include = "GameID,Notes,WinningScore,GameComplete,WinningTeam,Date,Player1,Player2,Player3,Player4,GameSerieID")]
+
         // POST: Games/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "GameID,Notes,WinningScore,GameComplete,WinningTeam,Date,Player1,Player2,Player3,Player4,GameSerieID")] Game game)
+        public ActionResult Create(Game game)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +98,14 @@ namespace Dominoes.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.GameSerieID = new SelectList(user.GameSeries, "GameSerieID", "Name");
+
+            GameHandler GameHandler = new GameHandler();
+            ViewBag.GameSerieID = GameHandler.SelectGameSeries(user, game);
+            ViewBag.Players = new SelectList(user.Groups
+                                                 .Where(i => i.DominoesGroupID == user.GroupAdministered)
+                                                 .Select(i => i.Users).First(),
+                                             "UserProfileInfoID",
+                                             "FirstName");
             return View(game);
         }
 
@@ -105,7 +114,7 @@ namespace Dominoes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "GameID,Notes,WinningScore,GameComplete,WinningTeam,Date,Player1,Player2,Player3,Player4,GameSerieID")] Game game)
+        public ActionResult Edit(Game game)
         {
             if (ModelState.IsValid)
             {
@@ -113,7 +122,18 @@ namespace Dominoes.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.GameSerieID = new SelectList(db.GameSerie, "GameSerieID", "Name", game.GameSerieID);
+
+            UserHandler userHandler = new UserHandler();
+            UserProfileInfo user = userHandler.GetUserLogged();
+
+
+            GameHandler GameHandler = new GameHandler();
+            ViewBag.GameSerieID = GameHandler.SelectGameSeries(user, game);
+            ViewBag.Players = new SelectList(user.Groups
+                                                 .Where(i => i.DominoesGroupID == user.GroupAdministered)
+                                                 .Select(i => i.Users).First(),
+                                             "UserProfileInfoID",
+                                             "FirstName");
             return View(game);
         }
 

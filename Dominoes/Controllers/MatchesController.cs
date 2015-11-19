@@ -44,7 +44,7 @@ namespace Dominoes.Controllers
         {
             UserHandler UserHandler = new UserHandler();
             var UserProfileInfoID = UserHandler.GetUserLogged().UserProfileInfoID;
-            ViewBag.GameID = new SelectList(db.Game.Where( i => i.GameSerie.UserProfileInfoID == UserProfileInfoID), "GameID", "Notes");
+            ViewBag.GameID = new SelectList(db.Game.Where(i => (i.GameSerie.UserProfileInfoID == UserProfileInfoID) && (i.GameComplete == false)), "GameID", "Notes");
             return View();
         }
 
@@ -53,7 +53,7 @@ namespace Dominoes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MatchID,ScoreTeamA,ScoreTeamB,Notes,GameID")] Match match)
+        public ActionResult Create([Bind(Include = "MatchID,Score,TeamWinner,Notes,GameID")] Match match)
         {
             if (ModelState.IsValid)
             {
@@ -61,14 +61,14 @@ namespace Dominoes.Controllers
                 db.SaveChanges();
 
                 GameHandler matchHandler = new GameHandler();
-                bool winner = matchHandler.calculateScore(match.GameID);
+                bool winner = matchHandler.calculateScore(match.GameID, match.TeamWinner);
 
                 return RedirectToAction("Index");
             }
 
             UserHandler UserHandler = new UserHandler();
             var UserProfileInfoID = UserHandler.GetUserLogged().UserProfileInfoID;
-            ViewBag.GameID = new SelectList(db.Game.Where(i => i.GameSerie.UserProfileInfoID == UserProfileInfoID), "GameID", "Notes");
+            ViewBag.GameID = new SelectList(db.Game.Where(i => (i.GameSerie.UserProfileInfoID == UserProfileInfoID) && (i.GameComplete == false)), "GameID", "Notes");
             return View(match);
         }
 
@@ -85,10 +85,10 @@ namespace Dominoes.Controllers
                 return HttpNotFound();
             }
 
-
             UserHandler UserHandler = new UserHandler();
             var UserProfileInfoID = UserHandler.GetUserLogged().UserProfileInfoID;
-            ViewBag.GameID = new SelectList(db.Game.Where(i => i.GameSerie.UserProfileInfoID == UserProfileInfoID), "GameID", "Notes");
+            GameHandler GameHandler = new GameHandler();
+            ViewBag.GameID = GameHandler.SelectGames(UserProfileInfoID, match.GameID);
             return View(match);
         }
 
@@ -107,7 +107,8 @@ namespace Dominoes.Controllers
             }
             UserHandler UserHandler = new UserHandler();
             var UserProfileInfoID = UserHandler.GetUserLogged().UserProfileInfoID;
-            ViewBag.GameID = new SelectList(db.Game.Where(i => i.GameSerie.UserProfileInfoID == UserProfileInfoID), "GameID", "Notes");
+            GameHandler GameHandler = new GameHandler();
+            ViewBag.GameID = GameHandler.SelectGames(UserProfileInfoID, match.GameID);
             return View(match);
         }
 

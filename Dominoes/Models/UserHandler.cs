@@ -28,15 +28,28 @@ namespace Dominoes.Models
             return group;
         }
 
-        public string[] GetNamesInGame(Game game)
+        public List<string> GetNamesInGame(Game game)
         {
-            string[] Names = new string[4]
+            List<string> Names = new List<string>();
+            if (game.Player1 > 0) 
             {
-                db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player1).Select( i => i.FirstName).Single(),
-                db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player2).Select( i => i.FirstName).Single(),
-                db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player3).Select( i => i.FirstName).Single(),
-                db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player4).Select( i => i.FirstName).Single()
-            };
+                Names.Add(db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player1).Select(i => i.FirstName).Single());
+            }
+
+            if (game.Player2 > 0)
+            {
+                Names.Add(db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player2).Select(i => i.FirstName).Single());
+            }
+
+            if (game.Player3 > 0)
+            {
+                Names.Add(db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player3).Select(i => i.FirstName).Single());
+            }
+
+            if (game.Player4 > 0)
+            {
+                Names.Add(db.UserProfileInfo.Where(i => i.UserProfileInfoID == game.Player4).Select(i => i.FirstName).Single());
+            }
 
             return Names;
         }
@@ -66,8 +79,11 @@ namespace Dominoes.Models
                 var GameSerieData = db.Game
                                       .Where
                                       (
-                                         i => (i.WinningTeam == 1 && (i.Player1 == Id || i.Player2 == Id))
-                                         || (i.WinningTeam == 2 && (i.Player3 == Id || i.Player4 == Id))                                
+                                         i => (i.GameComplete == true)
+                                           && (i.WinningTeam == i.TeamPlayer1 && i.Player1 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer2 && i.Player2 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer3 && i.Player3 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer4 && i.Player4 == Id)
                                       )
                                       .OrderBy( i => i.GameSerieID)
                                       .Select
@@ -131,8 +147,11 @@ namespace Dominoes.Models
                 var GroupData = db.Game
                                       .Where
                                       (
-                                         i => (i.WinningTeam == 1 && (i.Player1 == Id || i.Player2 == Id))
-                                         || (i.WinningTeam == 2 && (i.Player3 == Id || i.Player4 == Id))
+                                         i => (i.GameComplete == true)
+                                           && (i.WinningTeam == i.TeamPlayer1 && i.Player1 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer2 && i.Player2 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer3 && i.Player3 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer4 && i.Player4 == Id)
                                       )
                                       .OrderBy(i => i.GameSerie.UserProfileInfo.GroupAdministered)
                                       .Select
@@ -203,8 +222,11 @@ namespace Dominoes.Models
                 var MonthData = db.Game
                                      .Where
                                      (
-                                        i => (i.WinningTeam == 1 && (i.Player1 == Id || i.Player2 == Id))
-                                        || (i.WinningTeam == 2 && (i.Player3 == Id || i.Player4 == Id))
+                                        i => (i.GameComplete == true)
+                                           && (i.WinningTeam == i.TeamPlayer1 && i.Player1 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer2 && i.Player2 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer3 && i.Player3 == Id)
+                                           || (i.WinningTeam == i.TeamPlayer4 && i.Player4 == Id)
                                      )
                                      .OrderBy(i => i.GameSerie.GameSerieID)
                                      .Select

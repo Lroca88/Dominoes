@@ -54,7 +54,10 @@
         </td>
        
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.GameID }) |
+            @if (!item.GameComplete || item.Date.Value.AddMinutes(10) > DateTime.Now)
+            {
+                @Html.ActionLink("Edit", "Edit", new { id=item.GameID }) @:|
+            }    
             @Html.ActionLink("Details", "Details", new { id=item.GameID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.GameID })
         </td>
